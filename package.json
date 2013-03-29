@@ -24,6 +24,15 @@
                         "email": "dan@techba.se",
                         "url": "http://github.com/morphar"
                     }],
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/morphar/extend-string.git"
+    },
+    "github": "http://github.com/morphar/extend-string",
+    "bugs": {
+        "mail": "",
+        "url": "http://github.com/morphar/extend-string/issues"
+    },
     "license": {
         "type": "MIT"
     },
