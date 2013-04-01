@@ -1,50 +1,40 @@
 {
-    "name": "extend-string",
-    "version": "0.0.1",
-    "description": "Extend (prototype) the String object with new features like trim, camelCase, shorten, etc.",
-    "keywords":[
-        "extend",
-        "string",
-        "strings",
-        "zeropadding",
-        "trim",
-        "repeat",
-        "uppercasefirst",
-        "camelcase",
-        "parsetrueint",
-        "striptags",
-        "shorten",
-        "addslashes",
-        "htmldecode",
-        "htmlencode"
-    ],
-    "author": "Dan Larsen",
-    "maintainers": [{
-                        "name": "Dan Larsen",
-                        "email": "dan@techba.se",
-                        "url": "http://github.com/morphar"
-                    }],
-    "repository": {
-        "type": "git",
-        "url": "http://github.com/morphar/extend-string.git"
-    },
-    "github": "http://github.com/morphar/extend-string",
-    "bugs": {
-        "mail": "",
-        "url": "http://github.com/morphar/extend-string/issues"
-    },
-    "license": {
-        "type": "MIT"
-    },
-    "main": "./index.js",
-    "engines": {
-        "node": ">=0.8.0"
-    }
+  "name": "extend-string",
+  "version": "0.0.1",
+  "description": "Extend (prototype) the String object with new features like trim, camelCase, shorten, etc.",
+  "keywords":[
+    "extend",
+    "string",
+    "strings",
+    "zeropadding",
+    "trim",
+    "repeat",
+    "uppercasefirst",
+    "camelcase",
+    "parsetrueint",
+    "striptags",
+    "shorten",
+    "addslashes",
+    "htmldecode",
+    "htmlencode"
+  ],
+  "author": "Dan Larsen",
+  "maintainers": [{
+    "name": "Dan Larsen",
+    "email": "dan@techba.se",
+    "url": "http://github.com/morphar"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/morphar/extend-string.git"
+  },
+  "github": "http://github.com/morphar/extend-string",
+  "bugs": {
+    "url": "http://github.com/morphar/extend-string/issues"
+  },
+  "license": "MIT",
+  "main": "./index.js",
+  "engines": {
+    "node": ">=0.8.0"
+  }
 }
-
-
-
-
-
-
-
