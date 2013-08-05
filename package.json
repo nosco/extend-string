@@ -1,6 +1,6 @@
 {
   "name": "extend-string",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Extend (prototype) the String object with new features like trim, camelCase, shorten, etc.",
   "keywords":[
     "extend",

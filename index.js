@@ -10,7 +10,7 @@ String.prototype.trim = function() {
 };
 
 
-String.prototype.repeat = function(times) { 
+String.prototype.repeat = function(times) {
   return String((new Array(times + 1)).join(String(this)));
 };
 
@@ -38,7 +38,7 @@ String.prototype.parseTrueInt = function() {
 
 String.prototype.stripTags = function(replaceChar) {
   if(typeof replaceChar == 'undefined') replaceChar = "";
-  
+
   var str = String(this);
   str = str.replace(/<\s*(\/|)\s*p\s*>/g, "\n");
   str = str.replace(/<\s*(\/|)\s*br\s*(\/|)\s*>/g, "\n");
@@ -54,23 +54,23 @@ String.prototype.stripTags = function(replaceChar) {
 String.prototype.shorten = function(length, append) {
   var str = String(this);
   length = String(length).parseTrueInt() || 55;
-  
+
   append = append || '';
-  
+
   if(str.length > length) {
     str = str.substr(0, (length - append.length) );
-    
+
     var lastpos = Math.max(str.lastIndexOf('.'), str.lastIndexOf(','), str.lastIndexOf(';'), str.lastIndexOf(' '));
     if(lastpos > length) str = str.substr(0, (length - append.length));
     else if(lastpos > 0) str = str.substr(0, lastpos);
-    
+
     if(append.length > 0) {
       if(str.substr((str.length-1)) == '.') str = str.substr(0, (str.length-1));
       else if(str.substr((str.length-1)) == ',') str = str.substr(0, (str.length-1));
       str += append;
     }
   }
-  
+
   return str;
 };
 
@@ -124,12 +124,12 @@ String.prototype.htmlDecode = function() {
     str = str.replace(regexCurCharcode, String.fromCharCode(result[1]));
     result = regexCharcode.exec(str);
   }
-  
+
   for(i in entitiesToChars) {
     var regex = new RegExp(i, 'g');
     str = str.replace(regex, entitiesToChars[i]);
   }
-  
+
   return String(str);
 };
 
