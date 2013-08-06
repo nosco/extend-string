@@ -26,11 +26,11 @@
   }],
   "repository": {
     "type": "git",
-    "url": "http://github.com/morphar/extend-string.git"
+    "url": "http://github.com/nosco/extend-string.git"
   },
-  "github": "http://github.com/morphar/extend-string",
+  "github": "http://github.com/nosco/extend-string",
   "bugs": {
-    "url": "http://github.com/morphar/extend-string/issues"
+    "url": "http://github.com/nosco/extend-string/issues"
   },
   "license": "MIT",
   "main": "./index.js",
