@@ -1,3 +1,5 @@
+[![NPM version](https://badge.fury.io/js/extend-string.png)](http://badge.fury.io/js/extend-string)
+
 # extend-string
 
 Extend (prototype) the String object with new features like trim, camelCase, shorten, etc.

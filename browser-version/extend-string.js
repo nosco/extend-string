@@ -30,8 +30,18 @@ String.prototype.camelCase = function(isClass) {
 };
 
 
+String.prototype.slug = function() {
+  var str = String(this);
+  str = str.replace(/([A-Z])/g, function($1) { return ' ' + $1.toLowerCase(); } );
+  str = str.replace(/([^a-z0-9]+)/g, ' ');
+  str = str.replace(/\s+/g, ' ');
+  str = str.trim().replace(/ /g, '-');
+  return str;
+};
+
+
 String.prototype.parseTrueInt = function() {
-  var number = parseInt(String(this));
+  var number = parseInt(this);
   return (isNaN(number) ? 0 : number);
 };
 
