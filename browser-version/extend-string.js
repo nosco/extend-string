@@ -5,6 +5,18 @@ String.prototype.zeroPadding = function(totalChars) {
 };
 
 
+String.prototype.pluralize = function(plural, count) {
+  var count = parseInt(count);
+  if(count === 0) {
+    return plural;
+  } else if(count === 1) {
+    return this;
+  } else {
+    return plural;
+  }
+};
+
+
 String.prototype.trim = function() {
   return String(this).replace(/^\s+/, '').replace(/\s+$/, '');
 };
@@ -35,7 +47,7 @@ String.prototype.slug = function() {
   str = str.replace(/([A-Z])/g, function($1) { return ' ' + $1.toLowerCase(); } );
   str = str.replace(/([^a-z0-9]+)/g, ' ');
   str = str.replace(/\s+/g, ' ');
-  str = str.trim().replace(/ /g, '-');
+  str = str.trim().replace(/ +/g, '-');
   return str;
 };
 
