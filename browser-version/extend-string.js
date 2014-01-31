@@ -42,12 +42,13 @@ String.prototype.camelCase = function(isClass) {
 };
 
 
-String.prototype.slug = function() {
+String.prototype.slug = function(spacer) {
+  spacer = spacer || '-';
   var str = String(this);
   str = str.replace(/([A-Z])/g, function($1) { return ' ' + $1.toLowerCase(); } );
   str = str.replace(/([^a-z0-9]+)/g, ' ');
   str = str.replace(/\s+/g, ' ');
-  str = str.trim().replace(/ +/g, '-');
+  str = str.trim().replace(/ +/g, spacer);
   return str;
 };
 
