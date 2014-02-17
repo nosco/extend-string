@@ -20,11 +20,13 @@ String.prototype.pluralize = function(plural, count) {
 String.prototype.linkify = function(target) {
   var str = String(this);
 
+  str = str.stripTags();
+
   str = str.replace(/\b[a-z0-9-_!#$%&'`=\*\+\-\/\?\^\{\|\}\~]+@[a-z0-9]+?[a-z0-9\-\.]+\.[a-z]{2,4}/ig, function() {
     return '<a href="mailto:' + arguments[0] + '">' + arguments[0] + '</a>';
   });
 
-  str = str.replace(/(^|[^a-z0-9@\.\-]{1})(((http|https|ftp)\:\/\/|\bw{3}\.|.{0})[a-z0-9]+?[a-z0-9\-\.]+\.[a-z]{2,4}(:[0-9]+)?\/?[a-z\u00C0-\u017F0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~]*)/gi, function() {
+  str = str.replace(/(^|[^a-z0-9@\.\-]{1}|[a-zA-Z]+:\/\/|www\.)((?:[0-9]{1,3}\.){3}[0-9]{1,3}|(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,})(:[0-9]+)?(\/[^\?\s]+)?(\?\S+)?/ig, function() {
     var link = arguments[1] + '<a href="' + arguments[2] + '"';
     if(target) {
       link += ' target="' + target + '"';
