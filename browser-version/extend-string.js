@@ -6,7 +6,7 @@ String.prototype.zeroPadding = function(totalChars) {
 
 
 String.prototype.pluralize = function(plural, count) {
-  var count = parseInt(count);
+  count = parseInt(count);
   if(count === 0) {
     return plural;
   } else if(count === 1) {
@@ -14,6 +14,26 @@ String.prototype.pluralize = function(plural, count) {
   } else {
     return plural;
   }
+};
+
+
+String.prototype.linkify = function(target) {
+  var str = String(this);
+
+  str = str.replace(/\b[a-z0-9-_!#$%&'`=\*\+\-\/\?\^\{\|\}\~]+@[a-z0-9]+?[a-z0-9\-\.]+\.[a-z]{2,4}/ig, function(captured) {
+    return '<a href="mailto:' + captured + '">';
+  });
+
+  str = str.replace(/((http|https|ftp)\:\/\/|\bw{3}\.|\b(?:<@))[a-z0-9]+?[a-z0-9\-\.]+\.[a-z]{2,4}(:[0-9]+)?\/?[a-z\u00C0-\u017F0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~]*/gi, function(captured) {
+    var link = '<a href="' + captured + '"';
+    if(target) {
+      link += ' target="' + target + '"';
+    }
+    link += '>' + captured + '</a>';
+    return link;
+  });
+
+  return str;
 };
 
 
@@ -148,7 +168,7 @@ String.prototype.htmlDecode = function() {
     result = regexCharcode.exec(str);
   }
 
-  for(i in entitiesToChars) {
+  for(var i in entitiesToChars) {
     var regex = new RegExp(i, 'g');
     str = str.replace(regex, entitiesToChars[i]);
   }
@@ -192,7 +212,7 @@ var charToEntities = { '&': '&amp;', ' ': '&nbsp;', '¡': '&iexcl;', '¢': '&cen
 
 String.prototype.htmlEncode = function() {
   var str = String(this);
-  for(i in charToEntities) {
+  for(var i in charToEntities) {
     var regex = new RegExp(i, 'g');
     str = str.replace(regex, charToEntities[i]);
   }

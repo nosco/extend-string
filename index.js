@@ -6,7 +6,7 @@ String.prototype.zeroPadding = function(totalChars) {
 
 
 String.prototype.pluralize = function(plural, count) {
-  var count = parseInt(count);
+  count = parseInt(count);
   if(count === 0) {
     return plural;
   } else if(count === 1) {
@@ -14,6 +14,26 @@ String.prototype.pluralize = function(plural, count) {
   } else {
     return plural;
   }
+};
+
+
+String.prototype.linkify = function(target) {
+  var str = String(this);
+
+  str = str.replace(/\b[a-z0-9-_!#$%&'`=\*\+\-\/\?\^\{\|\}\~]+@[a-z0-9]+?[a-z0-9\-\.]+\.[a-z]{2,4}/ig, function(captured) {
+    return '<a href="mailto:' + captured + '">';
+  });
+
+  str = str.replace(/((http|https|ftp)\:\/\/|\bw{3}\.|\b(?:<@))[a-z0-9]+?[a-z0-9\-\.]+\.[a-z]{2,4}(:[0-9]+)?\/?[a-z\u00C0-\u017F0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~]*/gi, function(captured) {
+    var link = '<a href="' + captured + '"';
+    if(target) {
+      link += ' target="' + target + '"';
+    }
+    link += '>' + captured + '</a>';
+    return link;
+  });
+
+  return str;
 };
 
 
@@ -108,35 +128,35 @@ String.prototype.addSlashes = function(replaceChar) {
 /* HTML DECODE */
 
 var entitiesToChars = { '&amp;': '&', '&nbsp;': ' ', '&iexcl;': '¡', '&cent;': '¢', '&pound;': '£', '&curren;': '¤', '&yen;': '¥', '&brvbar;': '¦',
-                        '&sect;': '§', '&uml;': '¨', '&copy;': '©', '&ordf;': 'ª', '&laquo;': '«', '&not;': '¬', '&reg;': '®', '&macr;': '¯',
-                        '&deg;': '°', '&plusmn;': '±', '&sup2;': '²', '&sup3;': '³', '&acute;': '´', '&micro;': 'µ', '&para;': '¶', '&middot;': '·',
-                        '&cedil;': '¸', '&sup1;': '¹', '&ordm;': 'º', '&raquo;': '»', '&frac14;': '¼', '&frac12;': '½', '&frac34;': '¾', '&iquest;': '¿',
-                        '&Agrave;': 'À', '&Aacute;': 'Á', '&Acirc;': 'Â', '&Atilde;': 'Ã', '&Auml;': 'Ä', '&Aring;': 'Å', '&AElig;': 'Æ', '&Ccedil;': 'Ç',
-                        '&Egrave;': 'È', '&Eacute;': 'É', '&Ecirc;': 'Ê', '&Euml;': 'Ë', '&Igrave;': 'Ì', '&Iacute;': 'Í', '&Icirc;': 'Î', '&Iuml;': 'Ï',
-                        '&ETH;': 'Ð', '&Ntilde;': 'Ñ', '&Ograve;': 'Ò', '&Oacute;': 'Ó', '&Ocirc;': 'Ô', '&Otilde;': 'Õ', '&Ouml;': 'Ö', '&times;': '×',
-                        '&Oslash;': 'Ø', '&Ugrave;': 'Ù', '&Uacute;': 'Ú', '&Ucirc;': 'Û', '&Uuml;': 'Ü', '&Yacute;': 'Ý', '&THORN;': 'Þ', '&szlig;': 'ß',
-                        '&agrave;': 'à', '&aacute;': 'á', '&acirc;': 'â', '&atilde;': 'ã', '&auml;': 'ä', '&aring;': 'å', '&aelig;': 'æ', '&ccedil;': 'ç',
-                        '&egrave;': 'è', '&eacute;': 'é', '&ecirc;': 'ê', '&euml;': 'ë', '&igrave;': 'ì', '&iacute;': 'í', '&icirc;': 'î', '&iuml;': 'ï',
-                        '&eth;': 'ð', '&ntilde;': 'ñ', '&ograve;': 'ò', '&oacute;': 'ó', '&ocirc;': 'ô', '&otilde;': 'õ', '&ouml;': 'ö', '&divide;': '÷',
-                        '&oslash;': 'ø', '&ugrave;': 'ù', '&uacute;': 'ú', '&ucirc;': 'û', '&uuml;': 'ü', '&yacute;': 'ý', '&thorn;': 'þ', '&yuml;': 'ÿ',
-                        '&quot;': '"', '&lt;': '<', '&gt;': '>', '&apos;': "'", '&OElig;': 'Œ', '&oelig;': 'œ', '&Scaron;': 'Š', '&scaron;': 'š',
-                        '&Yuml;': 'Ÿ', '&circ;': 'ˆ', '&tilde;': '˜', '&ensp;': ' ', '&emsp;': ' ', '&thinsp;': ' ', '&zwnj;': '‌', '&zwj;': '‍',
-                        '&lrm;': '‎', '&rlm;': '‏', '&ndash;': '–', '&mdash;': '—', '&lsquo;': '‘', '&rsquo;': '’', '&sbquo;': '‚', '&ldquo;': '“',
-                        '&rdquo;': '”', '&bdquo;': '„', '&dagger;': '†', '&Dagger;': '‡', '&permil;': '‰', '&lsaquo;': '‹', '&rsaquo;': '›', '&euro;': '€',
-                        '&fnof;': 'ƒ', '&Gamma;': 'Γ', '&Delta;': 'Δ', '&Theta;': 'Θ', '&Lambda;': 'Λ', '&Xi;': 'Ξ', '&Pi;': 'Π', '&Sigma;': 'Σ',
-                        '&Upsilon;': 'Υ', '&Phi;': 'Φ', '&Psi;': 'Ψ', '&Omega;': 'Ω', '&alpha;': 'α', '&beta;': 'β', '&gamma;': 'γ', '&delta;': 'δ',
-                        '&epsilon;': 'ε', '&zeta;': 'ζ', '&eta;': 'η', '&theta;': 'θ', '&iota;': 'ι', '&kappa;': 'κ', '&lambda;': 'λ', '&mu;': 'μ',
-                        '&nu;': 'ν', '&xi;': 'ξ', '&omicron;': 'ο', '&pi;': 'π', '&rho;': 'ρ', '&sigmaf;': 'ς', '&sigma;': 'σ', '&tau;': 'τ',
-                        '&upsilon;': 'υ', '&phi;': 'φ', '&chi;': 'χ', '&psi;': 'ψ', '&omega;': 'ω', '&thetasym;': 'ϑ', '&upsih;': 'ϒ', '&piv;': 'ϖ',
-                        '&bull;': '•', '&hellip;': '…', '&prime;': '′', '&Prime;': '″', '&oline;': '‾', '&frasl;': '⁄', '&weierp;': '℘', '&image;': 'ℑ',
-                        '&real;': 'ℜ', '&trade;': '™', '&alefsym;': 'ℵ', '&larr;': '←', '&uarr;': '↑', '&rarr;': '→', '&darr;': '↓', '&harr;': '↔',
-                        '&crarr;': '↵', '&lArr;': '⇐', '&uArr;': '⇑', '&rArr;': '⇒', '&dArr;': '⇓', '&hArr;': '⇔', '&forall;': '∀', '&part;': '∂',
-                        '&exist;': '∃', '&empty;': '∅', '&nabla;': '∇', '&isin;': '∈', '&notin;': '∉', '&ni;': '∋', '&prod;': '∏', '&sum;': '∑',
-                        '&minus;': '−', '&lowast;': '∗', '&radic;': '√', '&prop;': '∝', '&infin;': '∞', '&ang;': '∠', '&and;': '∧', '&or;': '∨',
-                        '&cap;': '∩', '&cup;': '∪', '&int;': '∫', '&there4;': '∴', '&sim;': '∼', '&cong;': '≅', '&asymp;': '≈', '&ne;': '≠',
-                        '&equiv;': '≡', '&le;': '≤', '&ge;': '≥', '&sub;': '⊂', '&sup;': '⊃', '&nsub;': '⊄', '&sube;': '⊆', '&supe;': '⊇',
-                        '&oplus;': '⊕', '&otimes;': '⊗', '&perp;': '⊥', '&sdot;': '⋅', '&lceil;': '⌈', '&rceil;': '⌉', '&lfloor;': '⌊', '&rfloor;': '⌋',
-                        '&lang;': '〈', '&rang;': '〉', '&loz;': '◊', '&spades;': '♠', '&clubs;': '♣', '&hearts;': '♥', '&diams;': '♦' };
+                  '&sect;': '§', '&uml;': '¨', '&copy;': '©', '&ordf;': 'ª', '&laquo;': '«', '&not;': '¬', '&reg;': '®', '&macr;': '¯',
+                  '&deg;': '°', '&plusmn;': '±', '&sup2;': '²', '&sup3;': '³', '&acute;': '´', '&micro;': 'µ', '&para;': '¶', '&middot;': '·',
+                  '&cedil;': '¸', '&sup1;': '¹', '&ordm;': 'º', '&raquo;': '»', '&frac14;': '¼', '&frac12;': '½', '&frac34;': '¾', '&iquest;': '¿',
+                  '&Agrave;': 'À', '&Aacute;': 'Á', '&Acirc;': 'Â', '&Atilde;': 'Ã', '&Auml;': 'Ä', '&Aring;': 'Å', '&AElig;': 'Æ', '&Ccedil;': 'Ç',
+                  '&Egrave;': 'È', '&Eacute;': 'É', '&Ecirc;': 'Ê', '&Euml;': 'Ë', '&Igrave;': 'Ì', '&Iacute;': 'Í', '&Icirc;': 'Î', '&Iuml;': 'Ï',
+                  '&ETH;': 'Ð', '&Ntilde;': 'Ñ', '&Ograve;': 'Ò', '&Oacute;': 'Ó', '&Ocirc;': 'Ô', '&Otilde;': 'Õ', '&Ouml;': 'Ö', '&times;': '×',
+                  '&Oslash;': 'Ø', '&Ugrave;': 'Ù', '&Uacute;': 'Ú', '&Ucirc;': 'Û', '&Uuml;': 'Ü', '&Yacute;': 'Ý', '&THORN;': 'Þ', '&szlig;': 'ß',
+                  '&agrave;': 'à', '&aacute;': 'á', '&acirc;': 'â', '&atilde;': 'ã', '&auml;': 'ä', '&aring;': 'å', '&aelig;': 'æ', '&ccedil;': 'ç',
+                  '&egrave;': 'è', '&eacute;': 'é', '&ecirc;': 'ê', '&euml;': 'ë', '&igrave;': 'ì', '&iacute;': 'í', '&icirc;': 'î', '&iuml;': 'ï',
+                  '&eth;': 'ð', '&ntilde;': 'ñ', '&ograve;': 'ò', '&oacute;': 'ó', '&ocirc;': 'ô', '&otilde;': 'õ', '&ouml;': 'ö', '&divide;': '÷',
+                  '&oslash;': 'ø', '&ugrave;': 'ù', '&uacute;': 'ú', '&ucirc;': 'û', '&uuml;': 'ü', '&yacute;': 'ý', '&thorn;': 'þ', '&yuml;': 'ÿ',
+                  '&quot;': '"', '&lt;': '<', '&gt;': '>', '&apos;': "'", '&OElig;': 'Œ', '&oelig;': 'œ', '&Scaron;': 'Š', '&scaron;': 'š',
+                  '&Yuml;': 'Ÿ', '&circ;': 'ˆ', '&tilde;': '˜', '&ensp;': ' ', '&emsp;': ' ', '&thinsp;': ' ', '&zwnj;': '‌', '&zwj;': '‍',
+                  '&lrm;': '‎', '&rlm;': '‏', '&ndash;': '–', '&mdash;': '—', '&lsquo;': '‘', '&rsquo;': '’', '&sbquo;': '‚', '&ldquo;': '“',
+                  '&rdquo;': '”', '&bdquo;': '„', '&dagger;': '†', '&Dagger;': '‡', '&permil;': '‰', '&lsaquo;': '‹', '&rsaquo;': '›', '&euro;': '€',
+                  '&fnof;': 'ƒ', '&Gamma;': 'Γ', '&Delta;': 'Δ', '&Theta;': 'Θ', '&Lambda;': 'Λ', '&Xi;': 'Ξ', '&Pi;': 'Π', '&Sigma;': 'Σ',
+                  '&Upsilon;': 'Υ', '&Phi;': 'Φ', '&Psi;': 'Ψ', '&Omega;': 'Ω', '&alpha;': 'α', '&beta;': 'β', '&gamma;': 'γ', '&delta;': 'δ',
+                  '&epsilon;': 'ε', '&zeta;': 'ζ', '&eta;': 'η', '&theta;': 'θ', '&iota;': 'ι', '&kappa;': 'κ', '&lambda;': 'λ', '&mu;': 'μ',
+                  '&nu;': 'ν', '&xi;': 'ξ', '&omicron;': 'ο', '&pi;': 'π', '&rho;': 'ρ', '&sigmaf;': 'ς', '&sigma;': 'σ', '&tau;': 'τ',
+                  '&upsilon;': 'υ', '&phi;': 'φ', '&chi;': 'χ', '&psi;': 'ψ', '&omega;': 'ω', '&thetasym;': 'ϑ', '&upsih;': 'ϒ', '&piv;': 'ϖ',
+                  '&bull;': '•', '&hellip;': '…', '&prime;': '′', '&Prime;': '″', '&oline;': '‾', '&frasl;': '⁄', '&weierp;': '℘', '&image;': 'ℑ',
+                  '&real;': 'ℜ', '&trade;': '™', '&alefsym;': 'ℵ', '&larr;': '←', '&uarr;': '↑', '&rarr;': '→', '&darr;': '↓', '&harr;': '↔',
+                  '&crarr;': '↵', '&lArr;': '⇐', '&uArr;': '⇑', '&rArr;': '⇒', '&dArr;': '⇓', '&hArr;': '⇔', '&forall;': '∀', '&part;': '∂',
+                  '&exist;': '∃', '&empty;': '∅', '&nabla;': '∇', '&isin;': '∈', '&notin;': '∉', '&ni;': '∋', '&prod;': '∏', '&sum;': '∑',
+                  '&minus;': '−', '&lowast;': '∗', '&radic;': '√', '&prop;': '∝', '&infin;': '∞', '&ang;': '∠', '&and;': '∧', '&or;': '∨',
+                  '&cap;': '∩', '&cup;': '∪', '&int;': '∫', '&there4;': '∴', '&sim;': '∼', '&cong;': '≅', '&asymp;': '≈', '&ne;': '≠',
+                  '&equiv;': '≡', '&le;': '≤', '&ge;': '≥', '&sub;': '⊂', '&sup;': '⊃', '&nsub;': '⊄', '&sube;': '⊆', '&supe;': '⊇',
+                  '&oplus;': '⊕', '&otimes;': '⊗', '&perp;': '⊥', '&sdot;': '⋅', '&lceil;': '⌈', '&rceil;': '⌉', '&lfloor;': '⌊', '&rfloor;': '⌋',
+                  '&lang;': '〈', '&rang;': '〉', '&loz;': '◊', '&spades;': '♠', '&clubs;': '♣', '&hearts;': '♥', '&diams;': '♦' };
 
 String.prototype.htmlDecode = function() {
   var str = String(this);
@@ -148,7 +168,7 @@ String.prototype.htmlDecode = function() {
     result = regexCharcode.exec(str);
   }
 
-  for(i in entitiesToChars) {
+  for(var i in entitiesToChars) {
     var regex = new RegExp(i, 'g');
     str = str.replace(regex, entitiesToChars[i]);
   }
@@ -160,39 +180,39 @@ String.prototype.htmlDecode = function() {
 /* HTML ENCODE */
 
 var charToEntities = { '&': '&amp;', ' ': '&nbsp;', '¡': '&iexcl;', '¢': '&cent;', '£': '&pound;', '¤': '&curren;', '¥': '&yen;', '¦': '&brvbar;',
-                       '§': '&sect;', '¨': '&uml;', '©': '&copy;', 'ª': '&ordf;', '«': '&laquo;', '¬': '&not;', '®': '&reg;', '¯': '&macr;',
-                       '°': '&deg;', '±': '&plusmn;', '²': '&sup2;', '³': '&sup3;', '´': '&acute;', 'µ': '&micro;', '¶': '&para;', '·': '&middot;',
-                       '¸': '&cedil;', '¹': '&sup1;', 'º': '&ordm;', '»': '&raquo;', '¼': '&frac14;', '½': '&frac12;', '¾': '&frac34;', '¿': '&iquest;',
-                       'À': '&Agrave;', 'Á': '&Aacute;', 'Â': '&Acirc;', 'Ã': '&Atilde;', 'Ä': '&Auml;', 'Å': '&Aring;', 'Æ': '&AElig;', 'Ç': '&Ccedil;',
-                       'È': '&Egrave;', 'É': '&Eacute;', 'Ê': '&Ecirc;', 'Ë': '&Euml;', 'Ì': '&Igrave;', 'Í': '&Iacute;', 'Î': '&Icirc;', 'Ï': '&Iuml;',
-                       'Ð': '&ETH;', 'Ñ': '&Ntilde;', 'Ò': '&Ograve;', 'Ó': '&Oacute;', 'Ô': '&Ocirc;', 'Õ': '&Otilde;', 'Ö': '&Ouml;', '×': '&times;',
-                       'Ø': '&Oslash;', 'Ù': '&Ugrave;', 'Ú': '&Uacute;', 'Û': '&Ucirc;', 'Ü': '&Uuml;', 'Ý': '&Yacute;', 'Þ': '&THORN;', 'ß': '&szlig;',
-                       'à': '&agrave;', 'á': '&aacute;', 'â': '&acirc;', 'ã': '&atilde;', 'ä': '&auml;', 'å': '&aring;', 'æ': '&aelig;', 'ç': '&ccedil;',
-                       'è': '&egrave;', 'é': '&eacute;', 'ê': '&ecirc;', 'ë': '&euml;', 'ì': '&igrave;', 'í': '&iacute;', 'î': '&icirc;', 'ï': '&iuml;',
-                       'ð': '&eth;', 'ñ': '&ntilde;', 'ò': '&ograve;', 'ó': '&oacute;', 'ô': '&ocirc;', 'õ': '&otilde;', 'ö': '&ouml;', '÷': '&divide;',
-                       'ø': '&oslash;', 'ù': '&ugrave;', 'ú': '&uacute;', 'û': '&ucirc;', 'ü': '&uuml;', 'ý': '&yacute;', 'þ': '&thorn;', 'ÿ': '&yuml;',
-                       '"': '&quot;', '<': '&lt;', '>': '&gt;', "'": '&apos;', 'Œ': '&OElig;', 'œ': '&oelig;', 'Š': '&Scaron;', 'š': '&scaron;',
-                       'Ÿ': '&Yuml;', 'ˆ': '&circ;', '˜': '&tilde;', ' ': '&ensp;', ' ': '&emsp;', ' ': '&thinsp;', '‌': '&zwnj;', '‍': '&zwj;',
-                       '‎': '&lrm;', '‏': '&rlm;', '–': '&ndash;', '—': '&mdash;', '‘': '&lsquo;', '’': '&rsquo;', '‚': '&sbquo;', '“': '&ldquo;',
-                       '”': '&rdquo;', '„': '&bdquo;', '†': '&dagger;', '‡': '&Dagger;', '‰': '&permil;', '‹': '&lsaquo;', '›': '&rsaquo;', '€': '&euro;',
-                       'ƒ': '&fnof;', 'Γ': '&Gamma;', 'Δ': '&Delta;', 'Θ': '&Theta;', 'Λ': '&Lambda;', 'Ξ': '&Xi;', 'Π': '&Pi;', 'Σ': '&Sigma;',
-                       'Υ': '&Upsilon;', 'Φ': '&Phi;', 'Ψ': '&Psi;', 'Ω': '&Omega;', 'α': '&alpha;', 'β': '&beta;', 'γ': '&gamma;', 'δ': '&delta;',
-                       'ε': '&epsilon;', 'ζ': '&zeta;', 'η': '&eta;', 'θ': '&theta;', 'ι': '&iota;', 'κ': '&kappa;', 'λ': '&lambda;', 'μ': '&mu;',
-                       'ν': '&nu;', 'ξ': '&xi;', 'ο': '&omicron;', 'π': '&pi;', 'ρ': '&rho;', 'ς': '&sigmaf;', 'σ': '&sigma;', 'τ': '&tau;',
-                       'υ': '&upsilon;', 'φ': '&phi;', 'χ': '&chi;', 'ψ': '&psi;', 'ω': '&omega;', 'ϑ': '&thetasym;', 'ϒ': '&upsih;', 'ϖ': '&piv;',
-                       '•': '&bull;', '…': '&hellip;', '′': '&prime;', '″': '&Prime;', '‾': '&oline;', '⁄': '&frasl;', '℘': '&weierp;', 'ℑ': '&image;',
-                       'ℜ': '&real;', '™': '&trade;', 'ℵ': '&alefsym;', '←': '&larr;', '↑': '&uarr;', '→': '&rarr;', '↓': '&darr;', '↔': '&harr;',
-                       '↵': '&crarr;', '⇐': '&lArr;', '⇑': '&uArr;', '⇒': '&rArr;', '⇓': '&dArr;', '⇔': '&hArr;', '∀': '&forall;', '∂': '&part;',
-                       '∃': '&exist;', '∅': '&empty;', '∇': '&nabla;', '∈': '&isin;', '∉': '&notin;', '∋': '&ni;', '∏': '&prod;', '∑': '&sum;',
-                       '−': '&minus;', '∗': '&lowast;', '√': '&radic;', '∝': '&prop;', '∞': '&infin;', '∠': '&ang;', '∧': '&and;', '∨': '&or;',
-                       '∩': '&cap;', '∪': '&cup;', '∫': '&int;', '∴': '&there4;', '∼': '&sim;', '≅': '&cong;', '≈': '&asymp;', '≠': '&ne;',
-                       '≡': '&equiv;', '≤': '&le;', '≥': '&ge;', '⊂': '&sub;', '⊃': '&sup;', '⊄': '&nsub;', '⊆': '&sube;', '⊇': '&supe;',
-                       '⊕': '&oplus;', '⊗': '&otimes;', '⊥': '&perp;', '⋅': '&sdot;', '⌈': '&lceil;', '⌉': '&rceil;', '⌊': '&lfloor;', '⌋': '&rfloor;',
-                       '〈': '&lang;', '〉': '&rang;', '◊': '&loz;', '♠': '&spades;', '♣': '&clubs;', '♥': '&hearts;', '♦': '&diams;' };
+                   '§': '&sect;', '¨': '&uml;', '©': '&copy;', 'ª': '&ordf;', '«': '&laquo;', '¬': '&not;', '®': '&reg;', '¯': '&macr;',
+                   '°': '&deg;', '±': '&plusmn;', '²': '&sup2;', '³': '&sup3;', '´': '&acute;', 'µ': '&micro;', '¶': '&para;', '·': '&middot;',
+                   '¸': '&cedil;', '¹': '&sup1;', 'º': '&ordm;', '»': '&raquo;', '¼': '&frac14;', '½': '&frac12;', '¾': '&frac34;', '¿': '&iquest;',
+                   'À': '&Agrave;', 'Á': '&Aacute;', 'Â': '&Acirc;', 'Ã': '&Atilde;', 'Ä': '&Auml;', 'Å': '&Aring;', 'Æ': '&AElig;', 'Ç': '&Ccedil;',
+                   'È': '&Egrave;', 'É': '&Eacute;', 'Ê': '&Ecirc;', 'Ë': '&Euml;', 'Ì': '&Igrave;', 'Í': '&Iacute;', 'Î': '&Icirc;', 'Ï': '&Iuml;',
+                   'Ð': '&ETH;', 'Ñ': '&Ntilde;', 'Ò': '&Ograve;', 'Ó': '&Oacute;', 'Ô': '&Ocirc;', 'Õ': '&Otilde;', 'Ö': '&Ouml;', '×': '&times;',
+                   'Ø': '&Oslash;', 'Ù': '&Ugrave;', 'Ú': '&Uacute;', 'Û': '&Ucirc;', 'Ü': '&Uuml;', 'Ý': '&Yacute;', 'Þ': '&THORN;', 'ß': '&szlig;',
+                   'à': '&agrave;', 'á': '&aacute;', 'â': '&acirc;', 'ã': '&atilde;', 'ä': '&auml;', 'å': '&aring;', 'æ': '&aelig;', 'ç': '&ccedil;',
+                   'è': '&egrave;', 'é': '&eacute;', 'ê': '&ecirc;', 'ë': '&euml;', 'ì': '&igrave;', 'í': '&iacute;', 'î': '&icirc;', 'ï': '&iuml;',
+                   'ð': '&eth;', 'ñ': '&ntilde;', 'ò': '&ograve;', 'ó': '&oacute;', 'ô': '&ocirc;', 'õ': '&otilde;', 'ö': '&ouml;', '÷': '&divide;',
+                   'ø': '&oslash;', 'ù': '&ugrave;', 'ú': '&uacute;', 'û': '&ucirc;', 'ü': '&uuml;', 'ý': '&yacute;', 'þ': '&thorn;', 'ÿ': '&yuml;',
+                   '"': '&quot;', '<': '&lt;', '>': '&gt;', "'": '&apos;', 'Œ': '&OElig;', 'œ': '&oelig;', 'Š': '&Scaron;', 'š': '&scaron;',
+                   'Ÿ': '&Yuml;', 'ˆ': '&circ;', '˜': '&tilde;', ' ': '&ensp;', ' ': '&emsp;', ' ': '&thinsp;', '‌': '&zwnj;', '‍': '&zwj;',
+                   '‎': '&lrm;', '‏': '&rlm;', '–': '&ndash;', '—': '&mdash;', '‘': '&lsquo;', '’': '&rsquo;', '‚': '&sbquo;', '“': '&ldquo;',
+                   '”': '&rdquo;', '„': '&bdquo;', '†': '&dagger;', '‡': '&Dagger;', '‰': '&permil;', '‹': '&lsaquo;', '›': '&rsaquo;', '€': '&euro;',
+                   'ƒ': '&fnof;', 'Γ': '&Gamma;', 'Δ': '&Delta;', 'Θ': '&Theta;', 'Λ': '&Lambda;', 'Ξ': '&Xi;', 'Π': '&Pi;', 'Σ': '&Sigma;',
+                   'Υ': '&Upsilon;', 'Φ': '&Phi;', 'Ψ': '&Psi;', 'Ω': '&Omega;', 'α': '&alpha;', 'β': '&beta;', 'γ': '&gamma;', 'δ': '&delta;',
+                   'ε': '&epsilon;', 'ζ': '&zeta;', 'η': '&eta;', 'θ': '&theta;', 'ι': '&iota;', 'κ': '&kappa;', 'λ': '&lambda;', 'μ': '&mu;',
+                   'ν': '&nu;', 'ξ': '&xi;', 'ο': '&omicron;', 'π': '&pi;', 'ρ': '&rho;', 'ς': '&sigmaf;', 'σ': '&sigma;', 'τ': '&tau;',
+                   'υ': '&upsilon;', 'φ': '&phi;', 'χ': '&chi;', 'ψ': '&psi;', 'ω': '&omega;', 'ϑ': '&thetasym;', 'ϒ': '&upsih;', 'ϖ': '&piv;',
+                   '•': '&bull;', '…': '&hellip;', '′': '&prime;', '″': '&Prime;', '‾': '&oline;', '⁄': '&frasl;', '℘': '&weierp;', 'ℑ': '&image;',
+                   'ℜ': '&real;', '™': '&trade;', 'ℵ': '&alefsym;', '←': '&larr;', '↑': '&uarr;', '→': '&rarr;', '↓': '&darr;', '↔': '&harr;',
+                   '↵': '&crarr;', '⇐': '&lArr;', '⇑': '&uArr;', '⇒': '&rArr;', '⇓': '&dArr;', '⇔': '&hArr;', '∀': '&forall;', '∂': '&part;',
+                   '∃': '&exist;', '∅': '&empty;', '∇': '&nabla;', '∈': '&isin;', '∉': '&notin;', '∋': '&ni;', '∏': '&prod;', '∑': '&sum;',
+                   '−': '&minus;', '∗': '&lowast;', '√': '&radic;', '∝': '&prop;', '∞': '&infin;', '∠': '&ang;', '∧': '&and;', '∨': '&or;',
+                   '∩': '&cap;', '∪': '&cup;', '∫': '&int;', '∴': '&there4;', '∼': '&sim;', '≅': '&cong;', '≈': '&asymp;', '≠': '&ne;',
+                   '≡': '&equiv;', '≤': '&le;', '≥': '&ge;', '⊂': '&sub;', '⊃': '&sup;', '⊄': '&nsub;', '⊆': '&sube;', '⊇': '&supe;',
+                   '⊕': '&oplus;', '⊗': '&otimes;', '⊥': '&perp;', '⋅': '&sdot;', '⌈': '&lceil;', '⌉': '&rceil;', '⌊': '&lfloor;', '⌋': '&rfloor;',
+                   '〈': '&lang;', '〉': '&rang;', '◊': '&loz;', '♠': '&spades;', '♣': '&clubs;', '♥': '&hearts;', '♦': '&diams;' };
 
 String.prototype.htmlEncode = function() {
   var str = String(this);
-  for(i in charToEntities) {
+  for(var i in charToEntities) {
     var regex = new RegExp(i, 'g');
     str = str.replace(regex, charToEntities[i]);
   }
