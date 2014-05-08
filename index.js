@@ -39,8 +39,11 @@ String.prototype.linkify = function(target) {
 };
 
 
-String.prototype.trim = function() {
-  return String(this).replace(/^\s+/, '').replace(/\s+$/, '');
+String.prototype.trim = function(replaceStr) {
+  replaceStr = replaceStr || '\\s';
+  var reStart = new RegExp('^'+replaceStr);
+  var reEnd = new RegExp(replaceStr+'$');
+  return String(this).replace(reStart, '').replace(reEnd, '');
 };
 
 
