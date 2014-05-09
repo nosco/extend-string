@@ -40,9 +40,13 @@ String.prototype.linkify = function(target) {
 
 
 String.prototype.trim = function(replaceStr) {
-  replaceStr = replaceStr || '\\s';
-  var reStart = new RegExp('^'+replaceStr);
-  var reEnd = new RegExp(replaceStr+'$');
+  if(typeof replaceStr !== 'undefined') {
+    replaceStr = replaceStr.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&");
+  } else {
+    replaceStr = "\\s";
+  }
+  var reStart = new RegExp('^'+replaceStr+'+');
+  var reEnd = new RegExp(replaceStr+'+$');
   return String(this).replace(reStart, '').replace(reEnd, '');
 };
 
