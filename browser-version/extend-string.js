@@ -88,6 +88,12 @@ String.prototype.parseTrueInt = function() {
 };
 
 
+String.prototype.parseTrueFloat = function() {
+  var number = parseFloat(this);
+  return (isNaN(number) ? 0 : number);
+};
+
+
 String.prototype.stripTags = function(replaceChar) {
   if(typeof replaceChar == 'undefined') replaceChar = "";
 
